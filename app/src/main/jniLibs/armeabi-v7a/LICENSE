@@ -1,0 +1,125 @@
+PDQ Image Library
+
+LICENSE AGREEMENT
+
+Part 1. DEFINITIONS
+-------------------
+
+1.1 Products
+    The "Products" covered under this license agreement are the
+    object code of the PDQ Image library, the corresponding header
+    files and Java bindings that are needed to control the functionality
+    of the library and the supplied documentation.
+    The source code of the library is not part of the Products
+    and is not transferred pursuant to this license.
+
+1.2 References
+    The "Licensee" refers to persons/entities who/which use the
+    supplied library for own purposes.
+
+1.3 Manufacturer
+    The "Licensor" and owner of the copyright is Martin Wawro
+    E-Mail: martin.wawro <humans place at-sign here> gmail.com
+
+1.4 Applicable Law, Place of Jurisdiction
+    The conclusion, interpretation and application of these terms are
+    governed by law of the Federal Republic of Germany, except with
+    regards to its conflict of laws provisions. Place of jurisdiction
+    will be Dortmund, Germany.
+
+
+Part 2. LICENSE
+---------------
+
+2.1 License
+    Licensor hereby grants to Licensee a revocable, nontransferable,
+    nonexclusive right and license to use the Products for 
+    non-commercial purposes under the terms and conditions of this
+    License Agreement.
+
+2.2 Permitted Uses
+    The Products may not be used for any profit-making purpose,
+    such as, but not restricted to, the development and distribution
+    of commercial program applications or creation of any commercial
+    derivative works of the Products.
+
+2.3 Ownership
+    All right, title and interest in and to all copies of the Products,
+    including, but not limited to, intellectual property rights,
+    remains with Licensor or its third party suppliers. Licensor may
+    make changes to the Products, or to items referenced therein, at any
+    time without notice, but is not obligated to support or update the
+    Products.
+
+2.4 Limited Right to Transfer
+    The Products may not be re-distributed for any commercial purposes.
+    This includes, but is not limited to, the re-distribution as part or
+    supplement of a commercial software package or software compilations.
+    Licensor grants the Licensee a non-exclusive, revocable right to
+    re-distribute the Products as part or supplement of non-profit
+    software packages, provided that this License file is part of the
+    distribution and that the pertaining non-profit software package is
+    not a part/supplement or derivative work of a commercial software
+    package not covered by this License Agreement.
+
+2.5 No Right to Modify
+    Licensee may not modify the Products in  any way, such as by
+    reverse engineering, decompiling or translating.
+
+2.6 Copyright Notice
+    Licensee promises to display a copyright notice on the screen at
+    first request of the application of the Products AND/OR within an
+    "About" requester accessible in the menu bar of the application
+    of the Products. This copyright notice should read as follows:
+
+    PDQ Image Library (c) 2016 Martin Wawro
+
+
+2.7 Scope
+    By installing and using the Products the Licensee agrees to all
+    terms of this license.
+
+2.8 Termination
+    This license agreement shall be effective unless and until terminated.
+    Licensor may, without prejudice to any other rights under this
+    license or applicable law, terminate the license granted in this agreement
+    at any time without notice to the Licensee if the Licensee fails to
+    comply with any of the terms and conditions in this License Agreement.
+    Upon termination of this agreement, all rights granted to the Licensee
+    under this agreement shall immediately terminate, and the Licensee shall
+    immediately destroy the Products or return all copies of the Products.
+
+
+
+Part 3. WARRANTIES
+------------------
+
+3.1 DISCLAIMER
+    EXCEPT AS EXPRESSLY STATED IN THIS AGREEMENT, THE SOFTWARE AND
+    ANY DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+    EXPRESSED OR IMPLIED. THE MANUFACTURER SPECIFICALLY DISCLAIMS ALL OTHER
+    WARRANTIES , EXPRESSED OR IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED
+    WARRANTIES AND MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE OR PURPOSE
+    RELATED TO DEFECTS IN THE PRODUCTS.
+    LICENSEE BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF THE SOFTWARE.
+
+    IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY LOSS OF PROFIT OR ANY
+    OTHER COMMERCIAL DAMAGE, INCLUDING BUT NOT LIMITED TO SPECIAL, INCIDENTIAL
+    CONSEQUENTIAL OR OTHER DAMAGES, EVEN IF LICENSOR HAS BEEN INFORMED
+    OR HAS OTHERWISE LEARNED THE POSSIBILITY OF A CLAIM FOR THE SAME.
+
+
+Part 4. LIABILITY LIMITATION
+----------------------------
+
+4.1 Limitation of Liability.
+    The express obligations contained in this Agreement are in lieu of all
+    liabilities or obligations of Licensor for damages, including, but not
+    limited to, general, special or consequential damages, including liability
+    for third party claims, arising out of or in connection with the delivery,
+    use or performance of the Products, or arising from the negligence of
+    Licensor, its employees, officers, directors or consultants. In addition,
+    Licensee further agrees that Licensor's liability to Licensee for damages
+    resulting from any cause whatsoever shall be limited to the charges paid by
+    Licensee for use of the Products relating to the cause of such damages.
+

@@ -1,0 +1,17 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".fragments.RollOverviewFragment">
+
+    <GridView
+        android:id="@+id/rollgrid_view"
+        android:numColumns="auto_fit"
+        android:columnWidth="@dimen/rollgrid_itemwidth"
+        android:horizontalSpacing="@dimen/rollgrid_spacing_horiz"
+        android:verticalSpacing="@dimen/rollgrid_spacing_vert"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </GridView>
+
+</FrameLayout>

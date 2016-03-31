@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+          android:drawable="@drawable/yuv_qual_low"
+          android:maxLevel="0"
+          android:minLevel="0">
+    </item>
+    <item
+        android:drawable="@drawable/yuv_qual_medium"
+        android:maxLevel="1"
+        android:minLevel="1">
+    </item>
+    <item
+        android:drawable="@drawable/yuv_qual_high"
+        android:maxLevel="2"
+        android:minLevel="2">
+    </item>
+    <item
+        android:drawable="@drawable/raw_qual_low"
+        android:maxLevel="3"
+        android:minLevel="3">
+    </item>
+    <item
+        android:drawable="@drawable/raw_qual_medium"
+        android:maxLevel="4"
+        android:minLevel="4">
+    </item>
+    <item
+        android:drawable="@drawable/raw_qual_high"
+        android:maxLevel="5"
+        android:minLevel="5">
+    </item>
+</level-list>
+
+
