@@ -23,12 +23,28 @@ This repository consists of a small example application demonstrating the use
 of the libraries API (cameraexample). The Java-bindings to the native ARM
 library can be found in the org.mtnwrw.pdqimg subfolder.
 
+Intended Audience
+-----------------
+
+This project might be suitable for developers of camera apps that require to rapidly
+capture images and need some means to instantaneously compress the acquired images
+before using up all the RAM. In particular, this library might come in quite handy
+if CFA (Bayer raw) images shall be acquired and the storage of the uncompressed raw
+data is not an option (see the [Wiki page](../../wiki)) for compression efficiency.
+
+Please note that the main emphasis of the code in this is repository is not the
+included example application but the native library and its Java bindings. The 
+example application is nothing but a vehicle that is used to show how to trigger
+the compression/decompression API and is by no means does it constitutes a complete 
+(or even incomplete) camera application.
+
+
 Performance
 -----------
 
 The compression speed on 8 Megapixel RAW (RGGB) images on a Qualcomm Snapdragon 800
 CPU @ 2.2GHz (LG Nexus 5, 2013 model) is well within the range of 30 fps or faster.
-A simple benchmark on a real-world test image yielded the following timings:
+A simple benchmark on a real-world raw test image yielded the following timings:
  * 23 ms per image for low quality (41 fps)
  * 27 ms per image for medium quality (37 fps)
  * 31 ms per image for high quality (32 fps)
