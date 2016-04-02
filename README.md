@@ -35,7 +35,7 @@ data is not an option (see the [Wiki page](../../wiki)) for compression efficien
 Please note that the main emphasis of the code in this is repository is not the
 included example application but the native library and its Java bindings. The 
 example application is nothing but a vehicle that is used to show how to trigger
-the compression/decompression API and is by no means does it constitutes a complete 
+the compression/decompression API and by no means does it constitute a complete 
 (or even incomplete) camera application.
 
 
