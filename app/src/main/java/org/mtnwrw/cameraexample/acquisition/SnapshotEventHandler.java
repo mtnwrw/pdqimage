@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.ImageFormat;
+import android.hardware.camera2.DngCreator;
 import android.hardware.camera2.TotalCaptureResult;
 import android.media.Image;
 import android.os.Handler;
@@ -45,10 +46,12 @@ import org.mtnwrw.cameraexample.db.DatabaseManager;
 import org.mtnwrw.pdqimg.CompressionQueueEntry;
 import org.mtnwrw.pdqimg.CompressionService;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
@@ -618,13 +621,10 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
    * @param result The meta-data that match the supplied image
    */
   public void onImageAvailable(CameraDriver driver,Image img, TotalCaptureResult result) {
-    //------------------------------------------------------
-    // Fetch latest image and look for matching meta-data...
-    //------------------------------------------------------
     if (img != null) {
       if (RollState.get() == ROLLSTATE_RUNNING) {
         //------------------------------------------------------
-        // ...now see if we have a buffer we can reuse, if not
+        // See if we have a buffer we can reuse, if not
         // allocate a new one...
         //------------------------------------------------------
         ByteBuffer outstream;

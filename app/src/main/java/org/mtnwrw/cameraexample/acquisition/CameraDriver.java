@@ -315,6 +315,7 @@ public class CameraDriver {
     }
 
     /**
+     * Handler that is invoked when a full-frame capture has been started
      *
      * @param session The currently active {@link CameraCaptureSession}
      *
@@ -434,7 +435,7 @@ public class CameraDriver {
         }
         if (!processIncomingImage(latest)) {
           synchronized (PendingImages) {
-            PendingImages.addFirst(latest);
+            if (Recording) PendingImages.addFirst(latest);
           }
         }
       } else {
@@ -457,46 +458,7 @@ public class CameraDriver {
 
     @Override
     public void onOpened(CameraDevice cameraDevice) {
-      //------------------------------------------------------
-      // Create capture session and instantiate preview and
-      // capture targets for image display/storage. Also build
-      // and set the preview image request...
-      //------------------------------------------------------
-      try {
-        CaptureReader = ImageReader.newInstance(CaptureSize.getWidth(), CaptureSize.getHeight(), CaptureFormat, NumInternalBuffers);
-        PreviewBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-        CaptureReader.setOnImageAvailableListener(CaptureListener, CameraHandler);
-        AvailableBuffers = new Semaphore(NumInternalBuffers - 1);
-        PreviewBuilder.addTarget(LiveSurface);
-        PreviewBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
-        PreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-        cameraDevice.createCaptureSession(Arrays.asList(LiveSurface, CaptureReader.getSurface()), new CameraCaptureSession.StateCallback() {
-          @Override
-          public void onConfigured(CameraCaptureSession cameraCaptureSession) {
-            CaptureSession = cameraCaptureSession;
-            try {
-              PreviewRequest = PreviewBuilder.build();
-              cameraCaptureSession.setRepeatingRequest(PreviewRequest, PreviewCallback, CameraHandler);
-            } catch (CameraAccessException ex) {
-              ex.printStackTrace();
-            }
-          }
-
-          @Override
-          public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
-            Log.e(LOGTAG, "Unable to create camera preview session");
-          }
-        }, null);
-      } catch (CameraAccessException ex) {
-        ex.printStackTrace();
-      }
-      if (SnapshotPolicy != null) {
-        try {
-          SnapshotPolicy.apply(cameraDevice, CaptureReader.getSurface());
-        } catch (CameraAccessException ex) {
-          ex.printStackTrace();
-        }
-      }
+      setupCaptureSession(cameraDevice);
       CameraDev = cameraDevice;
     }
 
@@ -609,15 +571,25 @@ public class CameraDriver {
   }
 
   /**
-   * @param format
+   * Adjust the output format for full frame captures.
+   *
+   * @param format The format to use for full-frame captures (currently only YUV 420 and RAW
+   *               formats are supported)
+   *
+   * @see {@link ImageFormat}
    */
   public void setCaptureFormat(int format) {
-    CaptureFormat = format;
+    if ((CaptureFormat != format)&&(!isRecording())) {
+      CaptureFormat = format;
+      if (CameraDev != null) setupCaptureSession(CameraDev);
+    }
   }
 
 
   /**
-   * @return
+   * Retrieve the currently selected capture image format
+   *
+   * @return The image format to use for capturing full-frame images.
    */
   public int getCaptureFormat() {
     return CaptureFormat;
@@ -993,6 +965,68 @@ public class CameraDriver {
 
 
   /**
+   * Create capture session (incl. preview)
+   *
+   * <p>
+   * This function sets up a (new) capture session and makes sure that the appropriate
+   * target surfaces (preview and capture) are registered with the session and the corresponding
+   * request builders.
+   * </p>
+   *
+   * @param cameraDevice The currently selected camera device to use for capturing/live-display
+   */
+  protected void setupCaptureSession(CameraDevice cameraDevice) {
+    if (isRecording()) return;
+    try {
+      if (CaptureSession != null) {
+        CaptureSession.stopRepeating();
+        CaptureSession.close();
+        CaptureSession = null;
+      }
+      if (CaptureReader != null) {
+        CaptureReader.setOnImageAvailableListener(null,null);
+        CaptureReader = null;
+      }
+      CaptureReader = ImageReader.newInstance(CaptureSize.getWidth(), CaptureSize.getHeight(), CaptureFormat, NumInternalBuffers);
+      if (PreviewBuilder == null) {
+        PreviewBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+        PreviewBuilder.addTarget(LiveSurface);
+        PreviewBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+        PreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+      }
+      CaptureReader.setOnImageAvailableListener(CaptureListener, CameraHandler);
+      AvailableBuffers = new Semaphore(NumInternalBuffers - 1);
+      cameraDevice.createCaptureSession(Arrays.asList(LiveSurface, CaptureReader.getSurface()), new CameraCaptureSession.StateCallback() {
+        @Override
+        public void onConfigured(CameraCaptureSession cameraCaptureSession) {
+          CaptureSession = cameraCaptureSession;
+          try {
+            PreviewRequest = PreviewBuilder.build();
+            cameraCaptureSession.setRepeatingRequest(PreviewRequest, PreviewCallback, CameraHandler);
+          } catch (CameraAccessException ex) {
+            ex.printStackTrace();
+          }
+        }
+
+        @Override
+        public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
+          Log.e(LOGTAG, "Unable to create camera capture session");
+        }
+      }, null);
+    } catch (CameraAccessException ex) {
+      ex.printStackTrace();
+    }
+    if (SnapshotPolicy != null) {
+      try {
+        SnapshotPolicy.apply(cameraDevice, CaptureReader.getSurface());
+      } catch (CameraAccessException ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
+
+
+  /**
    * Obtain the default orientation of the current device.
    *
    * <p>
@@ -1205,6 +1239,7 @@ public class CameraDriver {
         img.close();
         AvailableBuffers.release();
       }
+      PendingImages.clear();
     }
   }
 

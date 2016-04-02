@@ -6,7 +6,7 @@ This library may be used for compressing camera images in real-time on
 Android/arm architectures. The compression algorithms are hand-tuned using
 ARMv7/NEONv3 assembler code and are able to compress:
  * YUV 420 8-Bit Images
- * RAW images with bit-depth of up to 14 bits (embedded in 16-bit words)
+ * RAW images with bit-depths of up to 14 bits (embedded in 16-bit words)
 
 Prerequisites
 -------------
@@ -23,12 +23,40 @@ This repository consists of a small example application demonstrating the use
 of the libraries API (cameraexample). The Java-bindings to the native ARM
 library can be found in the org.mtnwrw.pdqimg subfolder.
 
+Performance
+-----------
+
+The compression speed on 8 Megapixel RAW (RGGB) images on a Qualcomm Snapdragon 800
+CPU @ 2.2GHz (LG Nexus 5, 2013 model) is well within the range of 30 fps or faster.
+A simple benchmark on a real-world test image yielded the following timings:
+ * 23 ms per image for low quality (41 fps)
+ * 27 ms per image for medium quality (37 fps)
+ * 31 ms per image for high quality (32 fps)
+
+See the [Wiki page](../../wiki) for more details.
+
+
+Image Quality
+-------------
+
+As the used compression algorithm performs lossy image compression, the image quality
+is an additional concern. Naturally, some sacrifices are made in order to achieve
+high compression throughput. However the image quality (as measured with PSNR) is
+within an acceptable range (the source image was a RAW image, but the PSNR measurements
+were performed on demosaiced and color-corrected 8-bit versions of the original image):
+
+ * Low quality: 32.73 dB
+ * Medium quality: 35.67 dB
+ * High quality: 39.69 dB
+
+Again, see the [Wiki page](../../wiki) for more details.
+
 
 
 License
 -------
 
-Copyright 2016 Martin Wawro
+Copyright (c) 2016 Martin Wawro
 
 The example-part is licensed under a 2-clause BSD license whereas the library
 itself (and the Java-bindings) have a proprietary license, rendering the use
