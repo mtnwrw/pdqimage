@@ -201,13 +201,15 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
      *
      * @param img The image acquired by the camera
      *
+     * @param quality The compression quality to use for this image
+     *
      * @param outstream The target buffer (output buffer) that will contain the compressed data
      *
      * @param serialNo A serial number for the queue entry (e.g. offset within the current camera
      *                 roll)
      */
-    public QueueEntry(CameraDriver camDriver,TotalCaptureResult tc,Image img,ByteBuffer outstream,int serialNo) {
-      super(camDriver.getCameraCharacteristics(),tc,img,outstream);
+    public QueueEntry(CameraDriver camDriver,TotalCaptureResult tc,Image img, CompressionService.quality quality, ByteBuffer outstream,int serialNo) {
+      super(camDriver.getCameraCharacteristics(),tc,img,quality,outstream);
       Camera = camDriver;
       SerialNo = serialNo;
       Format = camDriver.CaptureFormat;
@@ -493,6 +495,7 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
       try {
         WaitCondition.await();
       } catch (InterruptedException ex) {
+        ex.printStackTrace();
       }
     }
     WaitLock.unlock();
@@ -501,7 +504,7 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
 
 
   /**
-   *
+   * Wait for the current roll to complete processing.
    */
   @Override
   public void waitRoll() {
@@ -510,6 +513,7 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
       try {
         WaitCondition.await();
       } catch (InterruptedException ex) {
+        ex.printStackTrace();
       }
     }
     WaitLock.unlock();
@@ -653,9 +657,9 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
         // ..and finally push the image to the compression
         // queue...
         //------------------------------------------------------
-        QueueEntry ent = new QueueEntry(driver, result, img, outstream, NextImageSerial++);
+        QueueEntry ent = new QueueEntry(driver, result, img, Quality, outstream, NextImageSerial++);
         if (driver.CaptureFormat == ImageFormat.RAW_SENSOR) ent.setCFAPattern(driver.CFAPattern);
-        CompressionService.queuestatus status = CompressionService.addToQueue(ent, Quality);
+        CompressionService.queuestatus status = CompressionService.addToQueue(ent);
         //------------------------------------------------------
         // If image was not pushed to the queue successfully,
         // release resources here..

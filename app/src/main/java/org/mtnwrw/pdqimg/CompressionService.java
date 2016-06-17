@@ -67,7 +67,7 @@ public class CompressionService {
   }
 
   /**
-   * Status codes used in conjunction with {@link #addToQueue(CompressionQueueEntry, quality)}.
+   * Status codes used in conjunction with {@link #addToQueue(CompressionQueueEntry)}.
    */
   public enum queuestatus {
     /** The queue entry has been successfully added to the queue */
@@ -212,18 +212,15 @@ public class CompressionService {
    * @param entry The job (enriched with all required information) to append to the internal
    *              compression queue.
    *
-   * @param compressionQuality The compression quality (see {@link org.mtnwrw.pdqimg.CompressionService.quality})
-   *                           which should be applied to this particular job.
-   *
    * @return Statuscode (see {@link org.mtnwrw.pdqimg.CompressionService.queuestatus}) which
    *         indicates if the job could be successfully added to the queue or the failure reason
    *         if this was not the case.
    */
-  static public queuestatus addToQueue(CompressionQueueEntry entry,quality compressionQuality) {
+  static public queuestatus addToQueue(CompressionQueueEntry entry) {
     if (!NativeOK) return queuestatus.QUEUE_NOT_RUNNING;
     synchronized (Instance) {
       if (!Instance.Running) return queuestatus.QUEUE_NOT_RUNNING;
-      int result = Instance.addJob(entry, compressionQuality.ordinal());
+      int result = Instance.addJob(entry, entry.getQuality().ordinal());
       switch (result) {
         case 0:
           Instance.InProgress.add(entry);
@@ -236,7 +233,7 @@ public class CompressionService {
           return queuestatus.QUEUE_NO_MEMORY;
         case 4:
           Instance.Pending.addLast(entry);
-          return queuestatus.QUEUE_BUSY;
+          return queuestatus.QUEUE_OK;
       }
       return queuestatus.QUEUE_ILLEGAL_PARAMS;
     }
@@ -304,6 +301,14 @@ public class CompressionService {
     entry.compressionDone(error);
     synchronized (Instance) {
       Instance.InProgress.remove(entry);
+      if ((Instance.Running)&&(Instance.Pending.size()>0)) {
+        CompressionQueueEntry pending = Instance.Pending.getFirst();
+        int result = Instance.addJob(pending, pending.getQuality().ordinal());
+        if (result == 0) {
+          Instance.Pending.removeFirst();
+          Instance.InProgress.add(pending);
+        }
+      }
     }
     entry.release();
   }

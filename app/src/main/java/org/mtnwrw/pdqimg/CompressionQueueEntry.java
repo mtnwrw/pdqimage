@@ -35,6 +35,12 @@ public abstract class CompressionQueueEntry {
    */
   private long InternalEntry = 0;
 
+
+  /**
+   * The quality to use for the compression of the associated image.
+   */
+  protected CompressionService.quality Quality;
+
   /**
    * Capture results that were communicated via CameraCaptureSession.CaptureCallback.
    */
@@ -110,11 +116,11 @@ public abstract class CompressionQueueEntry {
    *
    * @see {@link CompressionService#createOutputBuffer}
    */
-  public CompressionQueueEntry(CameraCharacteristics camChar,TotalCaptureResult meta,Image image, ByteBuffer outputStream) {
-    CaptureMetaData=meta;
-    ImageData=image;
-    OutputStream=outputStream;
-
+  public CompressionQueueEntry(CameraCharacteristics camChar,TotalCaptureResult meta,Image image, CompressionService.quality quality, ByteBuffer outputStream) {
+    CaptureMetaData = meta;
+    ImageData = image;
+    OutputStream = outputStream;
+    Quality = quality;
     BasicMetaData = new CaptureInfo(camChar,meta);
     Location = new LocationInfo(meta);
     ColorCorrection = new ColorCorrectionInfo(camChar,meta);
@@ -142,6 +148,15 @@ public abstract class CompressionQueueEntry {
     ImageData=null;
     OutputStream=null;
     OutputSize=0;
+  }
+
+  /**
+   * Get compression quality for the associated image of this entry.
+   *
+   * @return Compression quality for the associated image of this entry.
+   */
+  public CompressionService.quality getQuality() {
+    return Quality;
   }
 
 
