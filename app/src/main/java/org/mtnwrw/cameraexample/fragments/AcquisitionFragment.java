@@ -315,7 +315,9 @@ public class AcquisitionFragment extends Fragment implements View.OnClickListene
     //------------------------------------------------
     if (SnapHandler == null) SnapHandler = new SnapshotEventHandler(getActivity().getApplicationContext());
     if (Camera == null) Camera = new CameraDriver(getActivity(),SnapHandler);
-    if (CompressionService.getInstance() == null) CompressionService.initialize(1);
+    int cores = Runtime.getRuntime().availableProcessors();
+    Log.d(LOGTAG,"Starting compression service using "+cores+" CPU cores");
+    if (CompressionService.getInstance() == null) CompressionService.initialize(cores);
     Camera.init();
     LiveView.setSurfaceTextureListener(SurfaceListener);
     //------------------------------------------------
