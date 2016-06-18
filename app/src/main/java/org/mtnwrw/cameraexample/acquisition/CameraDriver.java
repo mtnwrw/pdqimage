@@ -899,9 +899,12 @@ public class CameraDriver {
           }
         }
         //--------------------------------------------------------
-        // Determine appropriate preview/capture sizes...
+        // Determine appropriate preview/capture sizes, try with
+        // 720p (1280x720) first before falling back to largest
+        // possible resolution
         //--------------------------------------------------------
-        CaptureSize = findLargestSize(mgr, useCamID, imgFormat);
+        CaptureSize = find720P(mgr,useCamID,imgFormat);
+        if (CaptureSize == null) CaptureSize = findLargestSize(mgr,useCamID,imgFormat);
         float targetar = (float) CaptureSize.getWidth() / (float) CaptureSize.getHeight();
         LivePreviewSize = findMatchingSize(mgr, useCamID, SurfaceTexture.class, matchsize, targetar);
         if ((CaptureSize != null) && (LivePreviewSize != null)) {
@@ -939,7 +942,7 @@ public class CameraDriver {
   }
 
   /**
-   *
+   * Perform autofocus, auto-exposure and auto-wb.
    */
   public void perform3A() {
     if ((PreState == PreviewState.PREVIEW) || (PreState == PreviewState.AAA_COMPLETE)) {
@@ -1131,6 +1134,18 @@ public class CameraDriver {
         }
       }
       return fullsize;
+    }
+    return null;
+  }
+
+
+  protected Size find720P(CameraManager mgr,String camID, int fmt) throws CameraAccessException {
+    CameraCharacteristics camtype = mgr.getCameraCharacteristics(camID);
+    StreamConfigurationMap streams = camtype.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+    if ((streams != null) && (streams.getOutputSizes(fmt) != null)) {
+      for (Size size : streams.getOutputSizes(fmt)) {
+        if ((size.getHeight()==720)&&(size.getWidth()==1280)) return size;
+      }
     }
     return null;
   }

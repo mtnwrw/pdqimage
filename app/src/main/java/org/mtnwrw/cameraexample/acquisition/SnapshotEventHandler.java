@@ -33,7 +33,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.ImageFormat;
-import android.hardware.camera2.DngCreator;
 import android.hardware.camera2.TotalCaptureResult;
 import android.media.Image;
 import android.os.Handler;
@@ -46,12 +45,10 @@ import org.mtnwrw.cameraexample.db.DatabaseManager;
 import org.mtnwrw.pdqimg.CompressionQueueEntry;
 import org.mtnwrw.pdqimg.CompressionService;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
@@ -192,6 +189,8 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
     private int SerialNo = 0;
     private CameraDriver Camera;
     private int Format;
+    long EntryStamp;
+    private long ExitStamp;
 
     /**
      *
@@ -231,6 +230,9 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
      *
      */
     public void compressionDone(boolean error) {
+      ExitStamp = System.nanoTime();
+      long micros = (ExitStamp-EntryStamp)/1000;
+      Log.d(LOGTAG,"Time spent in compression queue: "+micros+" microseconds");
       //-----------------------------------------------------
       // Close image and free resources...
       //-----------------------------------------------------
@@ -445,6 +447,7 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
     if (settings.contains("NextImageSerial")) {
       NextImageSerial = settings.getInt("NextImageSerial",1);
     }
+    Log.d(LOGTAG,"Next image serial: "+NextImageSerial);
     //------------------------------------------------
     // Fire-up the writer thread for writing to flash
     // storage...
@@ -517,6 +520,7 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
       }
     }
     WaitLock.unlock();
+    savePreferences();
   }
 
 
@@ -569,7 +573,6 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
     }
     waitRoll();
     cleanUp();    // just to make sure
-    savePreferences();
   }
 
 
@@ -606,6 +609,7 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
     SharedPreferences settings = AppContext.getSharedPreferences(PREFS,0);
     SharedPreferences.Editor editor = settings.edit();
     editor.putInt("NextImageSerial",NextImageSerial);
+    Log.d(LOGTAG,"Saving "+NextImageSerial+" as next image serial");
     editor.commit();
   }
 
@@ -659,6 +663,7 @@ public class SnapshotEventHandler implements SnapshotEventInterface {
         //------------------------------------------------------
         QueueEntry ent = new QueueEntry(driver, result, img, Quality, outstream, NextImageSerial++);
         if (driver.CaptureFormat == ImageFormat.RAW_SENSOR) ent.setCFAPattern(driver.CFAPattern);
+        ent.EntryStamp = System.nanoTime();
         CompressionService.queuestatus status = CompressionService.addToQueue(ent);
         //------------------------------------------------------
         // If image was not pushed to the queue successfully,
