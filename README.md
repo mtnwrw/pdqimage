@@ -43,11 +43,16 @@ Performance
 -----------
 
 The compression speed on 8 Megapixel RAW (RGGB) images on a Qualcomm Snapdragon 800
-CPU @ 2.2GHz (LG Nexus 5, 2013 model) is well within the range of 30 fps or faster.
+CPU @ 2.2GHz (LG Nexus 5, 2013 model) is well within the range of 30 fps.
 A simple benchmark on a real-world raw test image yielded the following timings:
  * 23 ms per image for low quality (41 fps)
  * 27 ms per image for medium quality (37 fps)
  * 31 ms per image for high quality (32 fps)
+
+For 8-bit YUV 420 data, the timings are:
+ * 30.5ms per image for low quality (32 fps)
+ * 35.1ms per image for medium quality (28 fps)
+ * 38.7ms per image for high quality (25 fps)
 
 See the [Wiki page](../../wiki) for more details.
 
@@ -65,7 +70,14 @@ were performed on demosaiced and color-corrected 8-bit versions of the original 
  * Medium quality: 35.67 dB
  * High quality: 39.69 dB
 
-Again, see the [Wiki page](../../wiki) for more details.
+For 8-Bit YUV420 data the PSNRs are:
+
+ * Low quality: 39.55 dB
+ * Medium quality: 41.79 dB
+ * High quality: 43.31 dB
+
+Again, see the [Wiki page](../../wiki) for more details. A complete evaluation on a
+test-image corpus including some meaningful statistics is underway.
 
 
 
@@ -78,3 +90,4 @@ The example-part is licensed under a 2-clause BSD license whereas the library
 itself (and the Java-bindings) have a proprietary license, rendering the use
 of the library as free for non-commercial purposes.
 
+[![Analytics](https://ga-beacon.appspot.com/UA-79853613-1/mtnwrw/pdqimg_main?pixel)]()
